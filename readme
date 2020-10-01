@@ -1,0 +1,69 @@
+kubectl proxy
+expose
+
+Part 1 - Deploy an app
+
+kubectl cluster-info
+kubectl version
+kubectl get nodes
+kubectl get deployments
+kubectl get pods
+
+kubectl create deployment simpleserver --image=fehlers/simple-server
+kubectl get deployments
+kubectl get pods
+kubectl describe pod PODNAME
+
+# kubectl proxy (2. terminal)
+# curl http://localhost:8001/
+
+part 2 - explore an app
+kubectl get pods
+kubectl describe pods
+kubectl logs POD_NAME
+kubectl exec -it PODNAME env
+kubectl exec -it PODNAME bash
+kubectl exec -it PODNAME curl localhost:8080
+
+>>> im pod
+cat app.js
+curl localhost:8080
+exit
+<<<
+
+
+part 3 - exposing app
+curl localhost:8080 # error
+kubectl get services
+kubectl expose deployment/simpleserver --type="NodePort" --port 8080
+curl localhost:8080 # es geht
+kubectl delete services deployment/simpleserver
+# kubectl get pods/services auch mit labels
+
+
+part 4 - scale app
+kubectl get deploy
+kubectl get rs
+kubectl scale deployments/simpleserver --replicas=4
+kubectl get po -owide	# verschiedene IPs beachten
+kubectl describe deployment/simpleserver # erfasst im event log
+kubectl describe services/simpleserver # siehe ips und ports
+
+kubectl scale deployments/simpleserver --replicas=2
+kubectl get deploy
+kubectl get po -owide	# verschiedene IPs beachten
+
+
+
+#### Technisches 
+PersistentVolumes -> unabhängiger lifecycle
+PersistentVolumesClaims -> request 
+
+ConfigMaps -> für nicht vertrauliche Daten (key-value-pair) # Motivation: Konfiguration von app trennen
+Secrets -> für  vertrauliche Daten (key-value-pair)
+
+HealthCheck/Probes -> Readiness/Liveness
+
+Ingress -> Traffic Routing http/https per ingress managed load-balancer
+
+
